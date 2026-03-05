@@ -1,0 +1,27 @@
+<Window x:Class="Kurs.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="СТО — Вход" Height="300" Width="340"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="#F0F0F0">
+    <StackPanel Margin="30">
+        <TextBlock Text="Авторизация" FontSize="16" FontWeight="SemiBold"
+                   Foreground="#1A1A1A" Margin="0,0,0,20"/>
+
+        <TextBlock Text="Логин" Style="{StaticResource FormLabel}" Margin="0,0,0,3"/>
+        <TextBox x:Name="TxtUsername" Style="{StaticResource ModernTextBox}" Height="28"/>
+
+        <TextBlock Text="Пароль" Style="{StaticResource FormLabel}"/>
+        <Border BorderBrush="#AAAAAA" BorderThickness="1" Background="White">
+            <PasswordBox x:Name="TxtPassword" Height="28" Padding="6,0"
+                         BorderThickness="0" FontSize="13" Background="Transparent"
+                         KeyDown="PasswordBox_KeyDown"/>
+        </Border>
+
+        <TextBlock x:Name="TxtError" Foreground="#CC0000" FontSize="12"
+                   Margin="0,6,0,0" Visibility="Collapsed" TextWrapping="Wrap"/>
+
+        <Button Content="Войти" Style="{StaticResource PrimaryButton}"
+                Height="30" Margin="0,18,0,0" Click="BtnLogin_Click"/>
+    </StackPanel>
+</Window>

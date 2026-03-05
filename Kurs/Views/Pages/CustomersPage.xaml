@@ -1,0 +1,59 @@
+<Page x:Class="Kurs.Views.Pages.CustomersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#F0F0F0">
+    <DockPanel>
+        <!-- Шапка -->
+        <Border DockPanel.Dock="Top" Background="White" Padding="14,10"
+                BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Клиенты" Style="{StaticResource PageTitle}"/>
+                    <TextBlock x:Name="TxtCount" FontSize="11"
+                               Foreground="{StaticResource MutedBrush}" Margin="0,2,0,0"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="Добавить"
+                        Style="{StaticResource PrimaryButton}" Height="28"
+                        VerticalAlignment="Center" Click="BtnAdd_Click"/>
+            </Grid>
+        </Border>
+        <!-- Поиск -->
+        <Border DockPanel.Dock="Top" Background="White" Padding="14,8"
+                BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <TextBox x:Name="TxtSearch" Style="{StaticResource ModernTextBox}"
+                     Height="26" MaxWidth="320" HorizontalAlignment="Left"
+                     TextChanged="TxtSearch_TextChanged"/>
+        </Border>
+        <!-- Таблица -->
+        <DataGrid x:Name="GridCustomers" Style="{StaticResource ModernGrid}"
+                  Margin="12">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID"         Binding="{Binding ID_Customers}" Width="50"/>
+                <DataGridTextColumn Header="Фамилия"    Binding="{Binding Last_Name}"    Width="*"/>
+                <DataGridTextColumn Header="Имя"        Binding="{Binding First_Name}"   Width="*"/>
+                <DataGridTextColumn Header="Отчество"   Binding="{Binding Middle_Name}"  Width="*"/>
+                <DataGridTextColumn Header="Телефон"    Binding="{Binding Phone}"        Width="150"/>
+                <DataGridTemplateColumn Header="Действия" Width="140" MinWidth="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="4,2">
+                                <Button Content="Изменить"
+                                        Style="{StaticResource PrimaryButton}"
+                                        Padding="8,4" FontSize="12"
+                                        Margin="0,0,4,0" Click="BtnEdit_Click"/>
+                                <Button Content="Удалить"
+                                        Style="{StaticResource DangerButton}"
+                                        Padding="8,4" FontSize="12"
+                                        Click="BtnDelete_Click"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Page>

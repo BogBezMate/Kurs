@@ -1,0 +1,179 @@
+<Page x:Class="Kurs.Views.Pages.WorkOrdersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#F0F0F0">
+    <DockPanel>
+        <!-- Шапка -->
+        <Border DockPanel.Dock="Top" Background="White" Padding="14,10"
+                BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Заказ-наряды" Style="{StaticResource PageTitle}"/>
+                    <TextBlock x:Name="TxtCount" FontSize="11" Foreground="{StaticResource MutedBrush}" Margin="0,2,0,0"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="Создать наряд"
+                        Style="{StaticResource PrimaryButton}" Height="28"
+                        VerticalAlignment="Center" Click="BtnAdd_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- Фильтры -->
+        <Border DockPanel.Dock="Top" Background="White" Padding="14,8"
+                BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="TxtSearch" Style="{StaticResource ModernTextBox}"
+                         Height="26" Width="240" Margin="0,0,12,0"
+                         TextChanged="TxtSearch_TextChanged"/>
+                <TextBlock Text="Статус:" VerticalAlignment="Center"
+                           FontSize="13" Foreground="#333333" Margin="0,0,6,0"/>
+                <ComboBox x:Name="CmbStatus" Style="{StaticResource ModernComboBox}"
+                          Width="150" SelectionChanged="CmbStatus_SelectionChanged"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Список + детали -->
+        <Grid Margin="12,10,12,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MinHeight="140"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="240"/>
+            </Grid.RowDefinitions>
+
+            <!-- Список нарядов -->
+            <DataGrid x:Name="GridOrders" Style="{StaticResource ModernGrid}"
+                      SelectionChanged="GridOrders_SelectionChanged" Grid.Row="0">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Status}" Value="Закрыт">
+                                <Setter Property="Foreground" Value="#007A33"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Status}" Value="Отменён">
+                                <Setter Property="Foreground" Value="#888888"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Номер"      Binding="{Binding Number}"                               Width="100"/>
+                    <DataGridTextColumn Header="Дата"       Binding="{Binding Date_Open, StringFormat=dd.MM.yyyy}"   Width="85"/>
+                    <DataGridTextColumn Header="Клиент"     Binding="{Binding Customer.FullName}"                    Width="*"/>
+                    <DataGridTextColumn Header="Автомобиль" Binding="{Binding Vehicle.DisplayName}"                  Width="*"/>
+                    <DataGridTextColumn Header="Статус"     Binding="{Binding Status}"                               Width="90"/>
+                    <DataGridTextColumn Header="Итого"
+                                        Binding="{Binding GrandTotal, StringFormat={}{0:N2} ₽}"                      Width="110"/>
+                    <DataGridTemplateColumn Header="Действия" Width="190">
+                        <DataGridTemplateColumn.CellTemplate><DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="4,2">
+                                <Button Content="Открыть"  Style="{StaticResource PrimaryButton}"
+                                        Padding="7,3" FontSize="11" Margin="0,0,3,0" Click="BtnOpen_Click"/>
+                                <Button Content="Закрыть"  Style="{StaticResource SuccessButton}"
+                                        Padding="7,3" FontSize="11" Margin="0,0,3,0" Click="BtnClose_Click"/>
+                                <Button Content="Удалить"  Style="{StaticResource DangerButton}"
+                                        Padding="7,3" FontSize="11" Click="BtnDelete_Click"/>
+                            </StackPanel>
+                        </DataTemplate></DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Детали -->
+            <Border Grid.Row="2" Background="White" BorderBrush="#CCCCCC" BorderThickness="1">
+                <DockPanel>
+                    <!-- Шапка деталей -->
+                    <Border DockPanel.Dock="Top" Background="#E8E8E8" Padding="12,6"
+                            BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="TxtDetailTitle" FontSize="12"
+                                       Foreground="#555555" VerticalAlignment="Center"
+                                       Text="Выберите наряд"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="Запчасти: " FontSize="12" Foreground="#555555" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TxtTotalParts" FontSize="12" FontWeight="SemiBold"
+                                           Foreground="#1A1A1A" VerticalAlignment="Center" Margin="0,0,14,0"/>
+                                <TextBlock Text="Работы: " FontSize="12" Foreground="#555555" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TxtTotalServices" FontSize="12" FontWeight="SemiBold"
+                                           Foreground="#1A1A1A" VerticalAlignment="Center" Margin="0,0,14,0"/>
+                                <TextBlock Text="Итого: " FontSize="12" FontWeight="SemiBold"
+                                           Foreground="#2B4C7E" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TxtGrandTotal" FontSize="12" FontWeight="SemiBold"
+                                           Foreground="#2B4C7E" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Вкладки -->
+                    <TabControl BorderThickness="0" Background="Transparent">
+                        <TabItem Header="Запчасти">
+                            <DockPanel Margin="8,6">
+                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
+                                    <Button Content="Добавить запчасть"
+                                            Style="{StaticResource PrimaryButton}"
+                                            Padding="10,5" FontSize="12" Margin="0,0,6,0"
+                                            Click="BtnAddPart_Click"/>
+                                    <Button Content="Удалить"
+                                            Style="{StaticResource DangerButton}"
+                                            Padding="10,5" FontSize="12"
+                                            Click="BtnRemovePart_Click"/>
+                                </StackPanel>
+                                <DataGrid x:Name="GridParts" Style="{StaticResource ModernGrid}" RowHeight="24">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Запчасть"  Binding="{Binding Part.Name}"                           Width="*"/>
+                                        <DataGridTextColumn Header="Кол-во"   Binding="{Binding Quantity}"                             Width="70"/>
+                                        <DataGridTextColumn Header="Цена"      Binding="{Binding Unit_Price, StringFormat={}{0:N2} ₽}" Width="110"/>
+                                        <DataGridTextColumn Header="Сумма"     Binding="{Binding LineSum, StringFormat={}{0:N2} ₽}"    Width="110"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+                        </TabItem>
+                        <TabItem Header="Работы">
+                            <DockPanel Margin="8,6">
+                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
+                                    <Button Content="Добавить работу"
+                                            Style="{StaticResource PrimaryButton}"
+                                            Padding="10,5" FontSize="12" Margin="0,0,6,0"
+                                            Click="BtnAddService_Click"/>
+                                    <Button Content="Удалить"
+                                            Style="{StaticResource DangerButton}"
+                                            Padding="10,5" FontSize="12"
+                                            Click="BtnRemoveService_Click"/>
+                                </StackPanel>
+                                <DataGrid x:Name="GridServices" Style="{StaticResource ModernGrid}" RowHeight="24">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Описание"   Binding="{Binding Description}" Width="*"/>
+                                        <DataGridTextColumn Header="Стоимость"  Binding="{Binding Price, StringFormat={}{0:N2} ₽}" Width="130"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+                        </TabItem>
+                        <TabItem Header="Исполнители">
+                            <DockPanel Margin="8,6">
+                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
+                                    <Button Content="Назначить"
+                                            Style="{StaticResource PrimaryButton}"
+                                            Padding="10,5" FontSize="12" Margin="0,0,6,0"
+                                            Click="BtnAddEmployee_Click"/>
+                                    <Button Content="Снять"
+                                            Style="{StaticResource DangerButton}"
+                                            Padding="10,5" FontSize="12"
+                                            Click="BtnRemoveEmployee_Click"/>
+                                </StackPanel>
+                                <DataGrid x:Name="GridEmployees" Style="{StaticResource ModernGrid}" RowHeight="24">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="ФИО"       Binding="{Binding Employee.FullName}" Width="*"/>
+                                        <DataGridTextColumn Header="Должность" Binding="{Binding Employee.Position}" Width="200"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+                        </TabItem>
+                    </TabControl>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Page>
